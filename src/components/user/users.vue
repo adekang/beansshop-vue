@@ -60,7 +60,7 @@
       </el-pagination>
     </el-card>
     <!--添加用户的对话框-->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%">
+    <el-dialog title="添加用户" @close="addDialogClosed" :visible.sync="addDialogVisible" width="50%">
       <!-- 对话框主体区域 -->
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
         <el-form-item label="用户名" prop="username">
@@ -181,6 +181,9 @@ export default {
         return this.$message.error('修改状态失败')
       }
       this.$message.success('更新状态成功')
+    },
+    addDialogClosed() {
+      this.$ref.addFormRef.resetFields()
     }
   }
 }
