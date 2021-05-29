@@ -4,6 +4,7 @@ import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import NotFound from '../components/NotFound.vue'
+import Users from '@/components/user/users.vue'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,7 @@ const routes = [
     redirect: '/welcome',
     children: [
       {path: '/welcome', component: Welcome},
+      {path: '/users', component: Users},
     ]
   },
   // 404页面

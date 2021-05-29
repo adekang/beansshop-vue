@@ -44,6 +44,7 @@
           </el-menu>
         </el-aside>
         <el-main>
+          <!--路由插件-->
           <router-view/>
         </el-main>
       </el-container>
