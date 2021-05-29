@@ -2,13 +2,25 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
+import Welcome from '../components/Welcome.vue'
+import NotFound from '../components/NotFound.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {path: '/', redirect: '/login'},
   {path: '/login', component: Login},
-  {path: '/home', component: Home},
+  {
+    path: '/home',
+    component: Home,
+    redirect: '/welcome',
+    children: [
+      {path: '/welcome', component: Welcome},
+    ]
+  },
+  // 404页面
+  {name: '404', path: '/404', component: NotFound},
+  {path: '*', redirect: '/404'}
 ]
 
 const router = new VueRouter({
