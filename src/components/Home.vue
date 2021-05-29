@@ -137,7 +137,8 @@ export default {
     font-size: 10px;
     line-height: 24px;
     color: white;
-    text-align: center;
+    text-align: right;
+    padding-right: 10px;
     letter-spacing: 0.2em;
     cursor: pointer;
   }
