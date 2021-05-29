@@ -48,6 +48,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <!--分页区域-->
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="querInfo.pagenum"
+          :page-sizes="[1, 2, 5, 10]"
+          :page-size="querInfo.pagesize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -60,7 +70,7 @@ export default {
       querInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 2
+        pagesize: 5
       },
       userList: [],
       total: 0
@@ -81,6 +91,16 @@ export default {
 
       console.log(this.userList)
       console.log(this.total)
+    },
+    // 监听 pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.querInfo.pagesize = newSize
+      this.getUserList()
+    },
+    // 页码值改变的事件
+    handleCurrentChange(newPage) {
+      this.querInfo.pagenum = newPage
+      this.getUserList()
     }
   }
 }
