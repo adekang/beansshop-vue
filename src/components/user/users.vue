@@ -16,7 +16,7 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row>
       <!--列表区-->
@@ -59,12 +59,51 @@
           :total="total">
       </el-pagination>
     </el-card>
+    <!--添加用户的对话框-->
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%">
+      <!-- 对话框主体区域 -->
+      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 对话框底部区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+    </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
   data() {
+    //验证邮箱的规则
+    let checkEmail = (rule, value, cb) => {
+      const regEmail = /^\w+@\w+(\.\w+)+$/
+      if (regEmail.test(value)) {
+        return cb()
+      }
+      cb(new Error('请输入合法的邮箱'))
+    }
+    //验证手机号码的规则
+    let checkMobile = (rule, value, cb) => {
+      const regMobile = /^1[34578]\d{9}$/
+      if (regMobile.test(value)) {
+        return cb()
+      }
+      cb(new Error('请输入合法的手机号码'))
+    }
     return {
       //  获取用户列表的参数对象
       querInfo: {
@@ -73,7 +112,42 @@ export default {
         pagesize: 5
       },
       userList: [],
-      total: 0
+      total: 0,
+      addDialogVisible: false,
+      addForm: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
+      },
+      addFormRules: {
+        username: [
+          {required: true, message: '请输入用户名称', trigger: 'blur'},
+          {
+            min: 3,
+            max: 10,
+            message: '用户名在3~10个字符之间',
+            trigger: 'blur'
+          }
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {
+            min: 6,
+            max: 15,
+            message: '用户名在6~15个字符之间',
+            trigger: 'blur'
+          }
+        ],
+        email: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          {validator: checkEmail, message: '邮箱格式不正确，请重新输入', trigger: 'blur'}
+        ],
+        mobile: [
+          {required: true, message: '请输入手机号码', trigger: 'blur'},
+          {validator: checkMobile, message: '手机号码不正确，请重新输入', trigger: 'blur'}
+        ]
+      }
     }
   },
   created() {
@@ -88,9 +162,6 @@ export default {
       //如果返回状态正常，将请求的数据保存在data中
       this.userList = res.data.users
       this.total = res.data.total
-
-      console.log(this.userList)
-      console.log(this.total)
     },
     // 监听 pagesize改变的事件
     handleSizeChange(newSize) {
