@@ -28,7 +28,7 @@
         <el-table-column label="角色" prop="role_name"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_state" active-color="#13ce66"/>
+            <el-switch v-model="scope.row.mg_state" active-color="#13ce66" @change="userStateChanged(scope.row)"/>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -101,6 +101,15 @@ export default {
     handleCurrentChange(newPage) {
       this.querInfo.pagenum = newPage
       this.getUserList()
+    },
+    async userStateChanged(userinfo) {
+      const {data: res} = await this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
+      //如果返回状态为异常状态则报错并返回
+      if (res.meta.status !== 200) {
+        userinfo.mg_state = !userinfo.mg_state
+        return this.$message.error('修改状态失败')
+      }
+      this.$message.success('更新状态成功')
     }
   }
 }
