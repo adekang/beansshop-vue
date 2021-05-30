@@ -25,9 +25,35 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      cateList: [],
+      //查询分类数据的条件
+      queryInfo: {
+        type: 3,
+        pagenum: 1,
+        pagesize: 5
+      },
+      //保存总数据条数
+      total: 0
+    }
   },
-  created() {}
+  created() {
+    this.getCateList()
+  },
+  methods: {
+    async getCateList() {
+      const {data: res} = await this.$http.get('categories', {
+        params: this.queryInfo
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取商品分类失败！')
+      }
+      //将数据列表赋值给cateList
+      this.cateList = res.data.result
+      //保存总数据条数
+      this.total = res.data.total
+    }
+  }
 }
 </script>
 
