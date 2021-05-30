@@ -35,7 +35,7 @@
           <template>
             <!--修改按钮-->
             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
-              <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
+              <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="showEditDialog()"></el-button>
             </el-tooltip>
             <!--删除按钮-->
             <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
@@ -82,6 +82,27 @@
         <el-button type="primary" @click="addUser">确 定</el-button>
     </span>
     </el-dialog>
+    <!--修改用户对话框-->
+    <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%">
+      <!-- 对话框主体区域 -->
+      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px">
+        <el-form-item label="用户名">
+          <el-input v-model="editForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="editForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 对话框底部区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+    </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -114,6 +135,7 @@ export default {
       userList: [],
       total: 0,
       addDialogVisible: false,
+      editDialogVisible: false,
       addForm: {
         username: '',
         password: '',
@@ -146,6 +168,31 @@ export default {
         mobile: [
           {required: true, message: '请输入手机号码', trigger: 'blur'},
           {validator: checkMobile, message: '手机号码不正确，请重新输入', trigger: 'blur'}
+        ]
+      },
+      //修改用户的表单数据
+      editForm: {
+        username: '',
+        email: '',
+        mobile: ''
+      },
+      //修改表单的验证规则对象
+      editFormRules: {
+        email: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          {
+            validator: checkEmail,
+            message: '邮箱格式不正确，请重新输入',
+            trigger: 'blur'
+          }
+        ],
+        mobile: [
+          {required: true, message: '请输入手机号码', trigger: 'blur'},
+          {
+            validator: checkMobile,
+            message: '手机号码不正确，请重新输入',
+            trigger: 'blur'
+          }
         ]
       }
     }
@@ -194,8 +241,11 @@ export default {
           return this.$message.error('添加用户失败')
         this.$message.success('添加用户成功')
         this.addDialogVisible = false
-        this.getUserList()
+        await this.getUserList()
       })
+    },
+    showEditDialog() {
+      this.editDialogVisible = true
     }
   }
 }
