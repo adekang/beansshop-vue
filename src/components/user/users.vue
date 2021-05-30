@@ -40,7 +40,8 @@
             </el-tooltip>
             <!--删除按钮-->
             <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-              <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
+              <el-button type="danger" size="mini" icon="el-icon-delete" circle
+                         @click="removeUserById(scope.row.id)"></el-button>
             </el-tooltip>
             <!--分配角色按钮-->
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
@@ -272,8 +273,24 @@ export default {
         this.$message.success('修改用户成功')
         this.editDialogVisible = false
         // 刷新数据列表
-        this.getUserList()
+        await this.getUserList()
       })
+    },
+    async removeUserById(id) {
+      console.log(id)
+      //弹出确定取消框，是否删除用户
+      const confirmResult = await this.$confirm('请问是否要永久删除该用户', '删除提示', {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已经取消删除')
+      }
+      const {data: res} = await this.$http.delete('users/' + id)
+      if (res.meta.status !== 200) return this.$message.error('删除用户失败')
+      this.$message.success('删除用户成功')
+      await this.getUserList()
     }
   }
 }
