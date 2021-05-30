@@ -45,7 +45,8 @@
             </el-tooltip>
             <!--分配角色按钮-->
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" size="mini" icon="el-icon-setting" circle></el-button>
+              <el-button type="warning" size="mini" icon="el-icon-setting" circle
+                         @click="setRole(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -108,7 +109,23 @@
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
     </span>
     </el-dialog>
-
+    <!-- 分配角色对话框 -->
+    <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="50%">
+      <div>
+        <p>当前的用户:{{ userInfo.username }}</p>
+        <p>当前的角色:{{ userInfo.role_name }}</p>
+        <p>分配新角色:
+          <el-select v-model="selectedRoleId" placeholder="请选择角色">
+            <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="setRoleDialogVisible = false">确 定</el-button>
+    </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -200,7 +217,14 @@ export default {
             trigger: 'blur'
           }
         ]
-      }
+      },
+      // 分配角色对话框的显示与隐藏
+      setRoleDialogVisible: false,
+      userInfo: {},
+      //所有角色的数据列表
+      rolesList: [],
+      // 选中的角色id值
+      selectedRoleId: ''
     }
   },
   created() {
@@ -291,6 +315,15 @@ export default {
       if (res.meta.status !== 200) return this.$message.error('删除用户失败')
       this.$message.success('删除用户成功')
       await this.getUserList()
+    },
+    // 展示分配角色的对话框
+    async setRole(userInfo) {
+      this.userInfo = userInfo
+      // 展示对话框之前获取所有的列表
+      const {data: res} = await this.$http.get('roles')
+      if (res.meta.status !== 200) return this.$message.error('获取角色列表失败')
+      this.rolesList = res.data
+      this.setRoleDialogVisible = true
     }
   }
 }
