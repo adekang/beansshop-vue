@@ -14,7 +14,7 @@
         </el-col>
       </el-row>
       <!--表格区域  -->
-      <tree-table :data="cateList" :columns="columns" :selection-type="false"
+      <tree-table class="treeTable" :data="cateList" :columns="columns" :selection-type="false"
                   :expand-type="false" show-index index-text="序号" border>
         <template slot="isok" slot-scope="scope">
           <i class="el-icon-success" v-if="scope.row.cat_deleted === false" style="color:lightgreen"></i>
@@ -34,6 +34,10 @@
         </template>
       </tree-table>
       <!--分页区域-->
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                     :current-page="queryInfo.pagenum" :page-sizes="[3, 5, 10, 15]" :page-size="queryInfo.pagesize"
+                     layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -76,11 +80,21 @@ export default {
       this.cateList = res.data.result
       //保存总数据条数
       this.total = res.data.total
+    },
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getCateList()
+    },
+    handleCurrentChange(newPage) {
+      this.queryInfo.pagenum = newPage
+      this.getCateList()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.treeTable {
+  margin-top: 15px;
+}
 </style>
