@@ -23,6 +23,9 @@ axios.interceptors.request.use(config => {
   return config
 })
 
+import TreeTable from 'vue-table-with-tree-grid'
+
+Vue.component('tree-table', TreeTable)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.use(ElementUI)
