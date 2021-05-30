@@ -20,6 +20,18 @@
           <i class="el-icon-success" v-if="scope.row.cat_deleted === false" style="color:lightgreen"></i>
           <i class="el-icon-error" v-else style="color:red"></i>
         </template>
+        <!-- 排序 -->
+        <template slot="order" slot-scope="scope">
+          <el-tag size="mini" v-if="scope.row.cat_level===0">一级</el-tag>
+          <el-tag size="mini" type="success" v-else-if="scope.row.cat_level===1">二级</el-tag>
+          <el-tag size="mini" type="warning" v-else>三级</el-tag>
+        </template>
+
+        <!-- 操作 -->
+        <template slot="opt"> <!--slot-scope="scope"-->
+          <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
+          <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
+        </template>
       </tree-table>
       <!--分页区域-->
     </el-card>
