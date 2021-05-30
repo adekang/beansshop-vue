@@ -110,7 +110,7 @@
     </span>
     </el-dialog>
     <!-- 分配角色对话框 -->
-    <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="50%">
+    <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="50%" @close="setRoleDialogClosed">
       <div>
         <p>当前的用户:{{ userInfo.username }}</p>
         <p>当前的角色:{{ userInfo.role_name }}</p>
@@ -123,7 +123,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
     <el-button @click="setRoleDialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="setRoleDialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
     </span>
     </el-dialog>
   </div>
@@ -292,7 +292,6 @@ export default {
         const {data: res} = await this.$http.put('users/' + this.editForm.id, {
           email: this.editForm.email, mobile: this.editForm.mobile
         })
-        console.log(res.data)
         if (res.meta.status !== 200) return this.$message.error('修改用户失败')
         this.$message.success('修改用户成功')
         this.editDialogVisible = false
@@ -301,7 +300,6 @@ export default {
       })
     },
     async removeUserById(id) {
-      console.log(id)
       //弹出确定取消框，是否删除用户
       const confirmResult = await this.$confirm('请问是否要永久删除该用户', '删除提示', {
         confirmButtonText: '确认删除',
@@ -324,6 +322,27 @@ export default {
       if (res.meta.status !== 200) return this.$message.error('获取角色列表失败')
       this.rolesList = res.data
       this.setRoleDialogVisible = true
+    },
+    async saveRoleInfo() {
+      if (!this.selectedRoleId) {
+        return this.$message.error('请选择要分配的角色!')
+      }
+      const {data: res} = await this.$http.put(`users/${this.userInfo.id}/role`, {
+        rid: this.selectedRoleId
+      })
+      //判断如果删除失败，就做提示
+      if (res.meta.status !== 200)
+        return this.$message.error('分配角色失败')
+
+      this.$message.success('分配角色成功')
+      this.getUserList()
+      //关闭对话框
+      this.setRoleDialogVisible = false
+    },
+    setRoleDialogClosed() {
+      //当关闭对话框的时候，重置下拉框中的内容
+      this.selectedRoleId = ''
+      this.userInfo = {}
     }
   }
 }
