@@ -12,7 +12,34 @@
         </el-col>
       </el-row>
       <el-table :data="roleList" border stripe>
-        <el-table-column type="expand"></el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-row class="vcenter" :class="['bdbottom' ,i1 ===0 ?'bdtop':'']" v-for="(item1 ,i1) in scope.row.children"
+                    :key="item1.id">
+              <!--渲染一级权限-->
+              <el-col :span="5">
+                <el-tag>{{ item1.authName }}</el-tag>
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <!--渲染二级权限-->
+              <el-col :span="19">
+                <!--二级权限-->
+                <el-row class="vcenter" :class="[i2 ===0 ?'':'bdtop' ]" v-for="(item2 ,i2) in item1.children "
+                        :key="item2.id">
+                  <el-col :span="6">
+                    <el-tag type="success">{{ item2.authName }}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <el-col :span="18">
+                    <el-tag type="warning" v-for="(item3) in item2.children" :key="item3.id">
+                      {{ item3.authName }}
+                    </el-tag>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column type="index"></el-table-column>
         <el-table-column label="角色名称" prop="roleName"></el-table-column>
         <el-table-column label="操作" width="300px">
@@ -49,5 +76,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-tag {
+  margin: 7px;
+}
 
+.bdtop {
+  border-top: 1px solid #eee;
+}
+
+.bdbottom {
+  border-bottom: 1px solid #eee;
+
+}
+
+.vcenter {
+  display: flex;
+  align-items: center;
+}
 </style>
