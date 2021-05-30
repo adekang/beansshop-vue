@@ -18,7 +18,7 @@
                     :key="item1.id">
               <!--渲染一级权限-->
               <el-col :span="5">
-                <el-tag>{{ item1.authName }}</el-tag>
+                <el-tag closable @click="removeRightById(scope.row,item1.id)">{{ item1.authName }}</el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <!--渲染二级权限-->
@@ -27,11 +27,18 @@
                 <el-row class="vcenter" :class="[i2 ===0 ?'':'bdtop' ]" v-for="(item2 ,i2) in item1.children "
                         :key="item2.id">
                   <el-col :span="6">
-                    <el-tag type="success">{{ item2.authName }}</el-tag>
+                    <el-tag type="success"
+                            closable
+                            @click="removeRightById(scope.row,item2.id)">{{ item2.authName }}
+                    </el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <el-col :span="18">
-                    <el-tag type="warning" v-for="(item3) in item2.children" :key="item3.id">
+                    <el-tag type="warning"
+                            v-for="(item3) in item2.children"
+                            :key="item3.id"
+                            closable
+                            @click="removeRightById(scope.row,item3.id)">
                       {{ item3.authName }}
                     </el-tag>
                   </el-col>
@@ -70,6 +77,25 @@ export default {
       if (res.meta.status !== 200)
         return this.$message.error('获取角色列表失败')
       this.roleList = res.data
+    },
+    async removeRightById(role, rightId) {
+      console.log('点击了')
+      //弹窗提示用户是否要删除
+      const confirmResult = await this.$confirm('请问是否要删除该权限', '删除提示', {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已经取消删除')
+      }
+      //用户点击了确定表示真的要删除
+      //当发送delete请求之后，返回的数据就是最新的角色权限信息
+      const {data: res} = await this.$http.delete(`roles/${role.id}/rights/${rightId}`)
+      if (res.meta.status !== 200)
+        return this.$message.error('删除角色权限失败')
+      role.children = res.data
+
     }
   }
 }
