@@ -10,7 +10,7 @@
     <el-card>
       <el-row>
         <el-col>
-          <el-button type="primary">添加分类</el-button>
+          <el-button type="primary" @click="showAddCateDialog">添加分类</el-button>
         </el-col>
       </el-row>
       <!--表格区域  -->
@@ -39,6 +39,22 @@
                      layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </el-card>
+    <!-- 添加分类对话框 -->
+    <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%" @close="addCateDialogClosed">
+      <!-- 添加分类表单 -->
+      <el-form :model="addCateForm" :rules="addCateFormRules" ref="addCateFormRuleForm" label-width="100px">
+        <el-form-item label="分类名称" prop="cat_name">
+          <el-input v-model="addCateForm.cat_name"></el-input>
+        </el-form-item>
+        <el-form-item label="父级分类" prop="cat_pid">
+
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="addCateDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="addCate">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -62,7 +78,25 @@ export default {
         {label: '是否有效', prop: '', type: 'template', template: 'isok'},
         {label: '排序', prop: '', type: 'template', template: 'order'},
         {label: '操作', prop: '', type: 'template', template: 'opt'}
-      ]
+      ],
+      //用来显示或隐藏添加分类对话框
+      addCateDialogVisible: false,
+      //添加分类的表单数据对象
+      addCateForm: {
+        //分类名称
+        cat_name: '',
+        //添加分类的父级id，0则表示父级为0.添加一级分类
+        cat_pid: 0,
+        //添加分类的等级，0则表示添加一级分类
+        cat_level: 0
+      },
+      //添加分类校验规则
+      addCateFormRules: {
+        //验证规则
+        cat_name: [{required: true, message: '请输入分类名称', trigger: 'blur'}]
+      },
+      //保存1,2级父级分类的列表
+      parentCateList: []
     }
   },
   created() {
@@ -88,6 +122,21 @@ export default {
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage
       this.getCateList()
+    },
+    showAddCateDialog() {
+      this.getParentCateList()
+      this.addCateDialogVisible = true
+    },
+    async getParentCateList() {
+      //获取父级分类数据列表
+      const {data: res} = await this.$http.get('categories', {
+        params: {type: 2}
+      })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取商品分类列表数据失败')
+      }
+      this.parentCateList = res.data
     }
   }
 }
