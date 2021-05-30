@@ -86,7 +86,11 @@
     <!--修改用户对话框-->
     <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%">
       <!-- 对话框主体区域 -->
-      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px">
+      <el-form :model="editForm"
+               :rules="editFormRules"
+               ref="editFormRef"
+               @close="editDialogClosed"
+               label-width="70px">
         <el-form-item label="用户名">
           <el-input v-model="editForm.username" disabled></el-input>
         </el-form-item>
@@ -251,6 +255,9 @@ export default {
       this.editForm = res.data
       console.log(res.data)
       this.editDialogVisible = true
+    },
+    editDialogClosed() {
+      this.$refs.editFormRef.resetFields()
     }
   }
 }
