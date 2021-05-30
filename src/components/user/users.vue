@@ -335,7 +335,7 @@ export default {
         return this.$message.error('分配角色失败')
 
       this.$message.success('分配角色成功')
-      this.getUserList()
+      await this.getUserList()
       //关闭对话框
       this.setRoleDialogVisible = false
     },

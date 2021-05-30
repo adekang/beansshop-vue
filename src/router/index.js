@@ -7,6 +7,7 @@ import NotFound from '../components/NotFound.vue'
 import Users from '@/components/user/users.vue'
 import Rights from '@/components/power/Rights.vue'
 import Roles from '@/components/power/Roles.vue'
+import Categories from '@/components/goods/Categories.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,7 @@ const routes = [
       {path: '/users', component: Users},
       {path: '/rights', component: Rights},
       {path: '/roles', component: Roles},
+      {path: '/categories', component: Categories},
     ]
   },
   // 404页面
