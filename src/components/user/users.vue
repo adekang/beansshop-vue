@@ -32,10 +32,11 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template>
+          <template slot-scope="scope">
             <!--修改按钮-->
             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
-              <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="showEditDialog()"></el-button>
+              <el-button type="primary" size="mini" icon="el-icon-edit" circle
+                         @click="showEditDialog(scope.row.id)"></el-button>
             </el-tooltip>
             <!--删除按钮-->
             <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
@@ -244,7 +245,11 @@ export default {
         await this.getUserList()
       })
     },
-    showEditDialog() {
+    async showEditDialog(id) {
+      const {data: res} = await this.$http.get('users/' + id)
+      if (res.meta.status !== 200) return this.$message.error('获取用户信息失败')
+      this.editForm = res.data
+      console.log(res.data)
       this.editDialogVisible = true
     }
   }
