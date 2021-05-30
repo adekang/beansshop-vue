@@ -104,7 +104,7 @@
       <!-- 对话框底部区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="editUserInfo">确 定</el-button>
     </span>
     </el-dialog>
 
@@ -237,6 +237,7 @@ export default {
     addDialogClosed() {
       this.$ref.addFormRef.resetFields()
     },
+    // 添加新用户
     addUser() {
       //调用validate进行表单验证
       this.$refs.addFormRef.validate(async valid => {
@@ -249,15 +250,30 @@ export default {
         await this.getUserList()
       })
     },
+    // 展示编辑用户对话框
     async showEditDialog(id) {
       const {data: res} = await this.$http.get('users/' + id)
       if (res.meta.status !== 200) return this.$message.error('获取用户信息失败')
       this.editForm = res.data
-      console.log(res.data)
       this.editDialogVisible = true
     },
+    // 关闭编辑对话框事件的重置
     editDialogClosed() {
       this.$refs.editFormRef.resetFields()
+    },
+    editUserInfo() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        const {data: res} = await this.$http.put('users/' + this.editForm.id, {
+          email: this.editForm.email, mobile: this.editForm.mobile
+        })
+        console.log(res.data)
+        if (res.meta.status !== 200) return this.$message.error('修改用户失败')
+        this.$message.success('修改用户成功')
+        this.editDialogVisible = false
+        // 刷新数据列表
+        this.getUserList()
+      })
     }
   }
 }
