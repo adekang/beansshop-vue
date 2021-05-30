@@ -6,7 +6,7 @@ import Welcome from '../components/Welcome.vue'
 import NotFound from '../components/NotFound.vue'
 import Users from '@/components/user/users.vue'
 import Rights from '@/components/power/Rights.vue'
-import Roles from '@/components/user/Roles.vue'
+import Roles from '@/components/power/Roles.vue'
 
 Vue.use(VueRouter)
 
