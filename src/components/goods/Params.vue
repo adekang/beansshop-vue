@@ -29,5 +29,7 @@ export default {}
 </script>
 
 <style lang="scss" scoped>
-
+.cat_opt {
+  margin: 15px 0;
+}
 </style>
