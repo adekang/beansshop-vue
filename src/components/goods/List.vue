@@ -32,11 +32,13 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200px">
-          <el-button size="mini" type="primary" icon="el-icon-edit">
-            编辑
-          </el-button>
-          <el-button size="mini" type="danger" icon="el-icon-delete">删除
-          </el-button>
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" icon="el-icon-edit">
+              编辑
+            </el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" @click="removeGoods(scope.row.goods_id)">删除
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
@@ -87,6 +89,27 @@ export default {
     },
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage
+      this.getGoodsList()
+    },
+    async removeGoods(goods_id) {
+      //根据id删除对应的参数或属性
+      const confirmResult = await this.$confirm(
+          '请问是否要删除该商品',
+          '删除提示',
+          {
+            confirmButtonText: '确认删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+      ).catch(err => err)
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已经取消删除')
+      }
+      const {data: res} = await this.$http.delete(`goods/${goods_id}`)
+      if (res.meta.status !== 200) {
+        return this.$message.error('删除商品失败')
+      }
+      this.$message.success('删除商品成功')
       this.getGoodsList()
     }
   }
