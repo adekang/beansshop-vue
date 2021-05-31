@@ -26,10 +26,37 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      //查询参数
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 10
+      },
+      //保存商品列表信息
+      goodsList: [],
+      //总数据条数
+      total: 0
+    }
   },
-  created() {},
-  methods: {}
+  created() {
+    this.getGoodsList()
+  },
+  methods: {
+    // 根据分页获取参数
+    async getGoodsList() {
+      //   根据分页获取对应的商品列表
+      const {data: res} = await this.$http.get('goods', {
+        params: this.queryInfo
+      })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取商品列表失败')
+      }
+      this.goodsList = res.data.goods
+      this.total - res.data.total
+    }
+  }
 }
 </script>
 
