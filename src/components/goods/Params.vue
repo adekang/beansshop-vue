@@ -22,12 +22,12 @@
         </el-col>
         <el-col></el-col>
       </el-row>
-
       <!-- tab页签区域   -->
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
         <!-- 添加动态参数的面板 将标签页改为many -->
         <el-tab-pane label="动态参数" name="many">
-          <el-button size="mini" type="primary" :disabled="isBtnDisabled">添加参数</el-button>
+          <el-button size="mini" type="primary" @click="addDialogVisible = true" :disabled="isBtnDisabled">添加参数
+          </el-button>
           <!-- 动态参数表格 -->
           <el-table :data="manyTableData" border stripe>
             <!-- 展开行 -->
@@ -45,7 +45,8 @@
         </el-tab-pane>
         <!-- 添加静态属性的面板 将标签页改为only -->
         <el-tab-pane label="静态属性" name="only">
-          <el-button size="mini" type="primary" :disabled="isBtnDisabled">添加属性</el-button>
+          <el-button size="mini" type="primary" @click="addDialogVisible = true" :disabled="isBtnDisabled">添加属性
+          </el-button>
           <!-- 静态属性表格 -->
           <el-table :data="onlyTableData" border stripe>
             <!-- 展开行 -->
@@ -63,6 +64,19 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+    <!-- 添加参数或属性对话框 -->
+    <el-dialog :title="'添加'+titleText" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
+      <!-- 添加表单 -->
+      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
+        <el-form-item :label="titleText" prop="attr_name">
+          <el-input v-model="addForm.attr_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addParams">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,7 +97,17 @@ export default {
       //用来保存动态参数数据
       manyTableData: [],
       //用来保存静态属性数据
-      onlyTableData: []
+      onlyTableData: [],
+      //控制添加参数.属性对话框的显示或隐藏
+      addDialogVisible: false,
+      //添加参数的表单数据对象
+      addForm: {
+        attr_name: ''
+      },
+      //添加表单验证规则
+      addFormRules: {
+        attr_name: [{required: true, message: '请输入名称', trigger: 'blur'}]
+      }
     }
   },
   created() {
@@ -124,6 +148,29 @@ export default {
     },
     handleTabClick() {
       this.getParamsData()
+    },
+    addDialogClosed() {
+      // 重置表单
+      this.$refs.addFormRef.resetFields()
+    },
+    addParams() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return
+        const {data: res} = await this.$http.post(`categories/${this.cateId}/attributes`,
+            {
+              attr_name: this.addForm.attr_name,
+              attr_sel: this.activeName,
+              attr_vals: 'a,b,c'
+            }
+        )
+
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加' + this.titleText + '数据失败')
+        }
+        this.$message.success('添加' + this.titleText + '数据成功')
+        this.addDialogVisible = false
+        this.getParamsData()
+      })
     }
   },
   computed: {
@@ -135,6 +182,12 @@ export default {
         return this.selectedCateKeys[2]
       }
       return null
+    },
+    titleText() {
+      if (this.activeName === 'many') {
+        return '动态参数'
+      }
+      return '静态参数'
     }
   }
 }
