@@ -17,6 +17,8 @@
         <el-col>
           <span>选择商品分类：</span>
           <!-- 选择商品分类的级联选择框 -->
+          <el-cascader expandTrigger='hover' v-model="selectedCateKeys" :options="cateList" :props="cateProps"
+                       @change="handleChange" clearable></el-cascader>
         </el-col>
         <el-col></el-col>
       </el-row>
@@ -28,7 +30,14 @@
 export default {
   data() {
     return {
-      cateList: []
+      cateList: [],
+      //配置级联菜单中数据如何展示
+      cateProps: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
+      },
+      selectedCateKeys: []
     }
   },
   created() {
@@ -42,6 +51,10 @@ export default {
       }
       this.cateList = res.data
       console.log(this.cateList)
+    },
+    handleChange(){
+      //当用户在级联菜单中选择内容改变时触发
+      console.log(this.selectedCateKeys)
     }
   }
 }
