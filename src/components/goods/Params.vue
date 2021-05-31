@@ -25,7 +25,26 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      cateList: []
+    }
+  },
+  created() {
+    this.getCateList()
+  },
+  methods: {
+    async getCateList() {
+      const {data: res} = await this.$http.get('categories')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取商品分类失败！')
+      }
+      this.cateList = res.data
+      console.log(this.cateList)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
