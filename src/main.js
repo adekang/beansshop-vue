@@ -17,6 +17,10 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+
+// 引入加载效果
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 //全局注册组件
 Vue.component('tree-table', TreeTable)
 //全局注册富文本组件
@@ -28,8 +32,15 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 // 设置拦截器
 axios.interceptors.request.use(config => {
-
+  //当进入request拦截器，表示发送了请求，我们就开启进度条
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
+})
+//在response拦截器中，隐藏进度条
+axios.interceptors.response.use(config => {
+  //当进入response拦截器，表示请求已经结束，我们就结束进度条
+  NProgress.done()
   return config
 })
 
