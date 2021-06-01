@@ -36,6 +36,7 @@
         <el-table-column label="操作" width="125px">
           <template>
             <el-button size="mini" type="primary" icon="el-icon-edit" @click="showBox"></el-button>
+            <!--            @click="showProgressBox" 有BUG 无法继续做 数据库没有此数据-->
             <el-button size="mini" type="success" icon="el-icon-location"></el-button>
           </template>
         </el-table-column>
@@ -61,6 +62,16 @@
         <el-button @click="addressVisible = false">取 消</el-button>
         <el-button type="primary" @click="addressVisible = false">确 定</el-button>
     </span>
+    </el-dialog>
+    <!-- 物流信息进度对话框 -->
+    <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%">
+      <!-- 时间线组件  -->
+      <el-timeline>
+        <el-timeline-item v-for="(activity, index) in progressInfo"
+                          :key="index" :timestamp="activity.time">
+          {{ activity.context }}
+        </el-timeline-item>
+      </el-timeline>
     </el-dialog>
   </div>
 </template>
@@ -90,7 +101,10 @@ export default {
         address2: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
       },
       //将导入的cityData数据保存起来
-      cityData: cityData
+      cityData: cityData,
+      progressVisible: false,
+      //保存物流信息
+      progressInfo: []
     }
   },
   created() {
@@ -123,6 +137,18 @@ export default {
     },
     addressDialogClosed() {
       this.$refs.addressFormRef.resetFields()
+    },
+    async showProgressBox() {
+      //发送请求获取物流数据
+      const {data: res} = await this.$http.get('/kuaidi/804909574412544580')
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取物流进度失败!')
+      }
+      this.progressInfo = res.data
+      //显示对话框
+      this.progressVisible = true
+      // console.log(this.progressInfo)
     }
   }
 }
