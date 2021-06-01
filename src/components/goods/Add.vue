@@ -22,7 +22,7 @@
         <el-step title="完成"></el-step>
       </el-steps>
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px" label-position="top">
-        <el-tabs v-model="activeIndex" :tab-position="'left'">
+        <el-tabs v-model="activeIndex" :tab-position="'left'" :before-leave="beforeTabLeave">
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="addForm.goods_name"></el-input>
@@ -119,6 +119,28 @@ export default {
       if (this.addForm.goods_cat.length !== 3) {
         this.$message.error('选择的不是三级分类,该次选择无效!')
         this.addForm.goods_cat = []
+      }
+    },
+    beforeTabLeave(activeName, oldActiveName) {
+      // 在tab栏切换之前触发，两个形参为切换前，后的tab栏name
+      if (oldActiveName === '0') {
+        //在第一个标签页的时候
+        if (this.addForm.goods_cat.length !== 3) {
+          this.$message.error('请选择商品的分类')
+          return false
+        } else if (this.addForm.goods_name.trim() === '') {
+          this.$message.error('请输入商品名称')
+          return false
+        } else if (this.addForm.goods_price.trim() === '0') {
+          this.$message.error('请输入商品价格')
+          return false
+        } else if (this.addForm.goods_weight.trim() === '0') {
+          this.$message.error('请输入商品重量')
+          return false
+        } else if (this.addForm.goods_number.trim() === '0') {
+          this.$message.error('请输入商品数量')
+          return false
+        }
       }
     }
   }
