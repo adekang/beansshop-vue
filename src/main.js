@@ -11,6 +11,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.scss'
 // 字体图标
 import './assets/fonts/iconfont.css'
+//导入vue-quill-editor（富文本编辑器）
+import VueQuillEditor from 'vue-quill-editor'
+//导入vue-quill-editor的样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+//全局注册组件
+Vue.component('tree-table', TreeTable)
+//全局注册富文本组件
+Vue.use(VueQuillEditor)
 
 // 引入axios
 import axios from 'axios'
