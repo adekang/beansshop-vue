@@ -29,13 +29,37 @@ export default {
         query: '',
         pagenum: 1,
         pagesize: 10
-      }
+      },
+      total: 0,
+      orderList: []
     }
   },
   created() {
+    this.getOrdersList()
 
   },
-  methods: {}
+  methods: {
+    async getOrderList() {
+      const {data: res} = await this.$http.get('orders', {
+        params: this.queryInfo
+      })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取订单列表数据失败!')
+      }
+
+      this.total = res.data.total
+      this.orderList = res.data.goods
+    },
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getOrderList()
+    },
+    handleCurrentChange(newPage) {
+      this.queryInfo.pagenum = newPage
+      this.getOrderList()
+    }
+  }
 }
 </script>
 
