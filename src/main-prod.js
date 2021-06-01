@@ -6,21 +6,18 @@ import router from './router'
 // Vuex
 import store from './store'
 // 全局引入 ElementUI
-import ElementUI from 'element-ui'
+// import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.scss'
 // 字体图标
 import './assets/fonts/iconfont.css'
 //导入vue-quill-editor（富文本编辑器）
 import VueQuillEditor from 'vue-quill-editor'
-//导入vue-quill-editor的样式
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
+
 
 // 引入加载效果
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+
 //全局注册组件
 Vue.component('tree-table', TreeTable)
 //全局注册富文本组件
@@ -49,7 +46,7 @@ import TreeTable from 'vue-table-with-tree-grid'
 Vue.component('tree-table', TreeTable)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 
 //创建过滤器将秒数过滤为年月日，时分秒
 Vue.filter('dateFormat', function (originVal) {
