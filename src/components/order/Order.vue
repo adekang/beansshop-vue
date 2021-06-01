@@ -138,6 +138,8 @@ export default {
     addressDialogClosed() {
       this.$refs.addressFormRef.resetFields()
     },
+    // ----------
+    // 有BUG 无法继续做 数据库没有此数据  ||||||||
     async showProgressBox() {
       //发送请求获取物流数据
       const {data: res} = await this.$http.get('/kuaidi/804909574412544580')
@@ -150,6 +152,10 @@ export default {
       this.progressVisible = true
       // console.log(this.progressInfo)
     }
+    // 有BUG 无法继续做 数据库没有此数据  ||||||||
+    //  -------------
+
+
   }
 }
 </script>
