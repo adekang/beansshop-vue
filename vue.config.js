@@ -1,4 +1,8 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/beansshop-vue-web/'
+    : '/',
+  outputDir:'dist',
   lintOnSave: false,
   chainWebpack: config => {
     //发布模式

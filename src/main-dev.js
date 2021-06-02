@@ -29,7 +29,9 @@ Vue.use(VueQuillEditor)
 // 引入axios
 import axios from 'axios'
 // 配置默认请求地址
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+// axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+// axios.defaults.baseURL = 'http://www.ysqorz.top:8888/api/private/v1/'
+axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
 // 设置拦截器
 axios.interceptors.request.use(config => {
   //当进入request拦截器，表示发送了请求，我们就开启进度条
