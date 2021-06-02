@@ -260,7 +260,7 @@ export default {
       this.$message.success('更新状态成功')
     },
     addDialogClosed() {
-      this.$ref.addFormRef.resetFields()
+      this.$refs.addFormRef.resetFields()
     },
     // 添加新用户
     addUser() {
