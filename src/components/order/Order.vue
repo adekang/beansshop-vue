@@ -138,7 +138,7 @@ export default {
     addressDialogClosed() {
       this.$refs.addressFormRef.resetFields()
     },
-    // ----------
+    //-------
     // 有BUG 无法继续做 数据库没有此数据  ||||||||
     async showProgressBox() {
       //发送请求获取物流数据

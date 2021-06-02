@@ -1,7 +1,8 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/beansshop-vue-web/'
-    : '/',
+  // publicPath: process.env.NODE_ENV === 'production'
+  //   ? '/beansshop-vue-web/'
+  //   : '/',
+  publicPath:'./',
   outputDir:'dist',
   lintOnSave: false,
   chainWebpack: config => {
