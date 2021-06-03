@@ -31,6 +31,7 @@ export default {
 
 <style lang="scss" scoped>
 .el-header {
+  margin: 0 0 15px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
