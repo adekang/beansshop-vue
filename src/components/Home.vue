@@ -3,12 +3,11 @@
     <el-container class="home-container">
       <!--      内容区域-->
       <el-container>
-        <el-aside :width="isCollapse? '64px': '200px'">
-          <!-- 菜单折叠 -->
-          <div class="toggle-button" @click="toggleCollapse">
-            |||
+        <el-aside :style="{width:menuStatus}">
+          <div :class="isCollapse?'aside-logo-shrink':'aside-logo'">
+            <img src="../assets/logocore.png" alt="logo">
+            <span>Beans Admin</span>
           </div>
-
           <!-- 侧边栏菜单 -->
           <el-menu
               background-color="#333744"
@@ -41,7 +40,7 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <Header/>
+          <Header v-on:toggleMenu="toggleCollapse"/>
           <!--路由插件-->
           <router-view/>
         </el-main>
@@ -75,9 +74,17 @@ export default {
   created() {
     this.getMenuList()
     this.activePath = window.sessionStorage.getItem('activePath')
-
+  },
+  computed: {
+    menuStatus() {
+      return this.isCollapse ? '64px' : '200px'
+    }
   },
   methods: {
+    //点击按钮切换菜单的折叠和展开
+    toggleCollapse() {
+      this.isCollapse = !this.isCollapse
+    },
     logout() {
       window.sessionStorage.clear()
       this.$router.push('/login')
@@ -88,16 +95,12 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.menuList = res.data
     },
-    //点击按钮切换菜单的折叠和展开
-    toggleCollapse() {
-      this.isCollapse = !this.isCollapse
-    },
+
     saveNavState(path) {
       window.sessionStorage.setItem('activePath', path)
       this.activePath = path
     }
-  }
-
+  },
 }
 
 </script>
@@ -110,6 +113,38 @@ export default {
 .el-aside {
   background-color: #333744;
   transition: all 250ms linear;
+
+  > .aside-logo {
+    padding: 15px 0 15px 15px;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 48px;
+      height: 48px;
+    }
+
+    > span {
+      padding-left: 15px;
+      color: white;
+      font-size: 18px;
+      white-space: nowrap;
+    }
+  }
+
+  > .aside-logo-shrink {
+    padding: 15px 0 15px 0;
+    text-align: center;
+
+    img {
+      width: 48px;
+      height: 48px;
+    }
+
+    > span {
+      display: none;
+    }
+  }
 
   > .toggle-button {
     background-color: #4A5064;

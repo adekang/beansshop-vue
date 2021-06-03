@@ -39,7 +39,6 @@ export default {
       this.list = this.$route.matched.filter(item => {
         return item.meta.title
       })
-      console.log(this.list)
     }
   }
 }

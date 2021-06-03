@@ -3,7 +3,10 @@
     <!--头部区域 布局在中间-->
     <el-header>
       <div>
-        <img src="../../assets/logocore.png" alt="logo">
+        <!-- 菜单折叠 -->
+        <div class="toggle-button" v-on:click="$emit('toggleMenu')">
+          <i class="el-icon-s-operation"></i>
+        </div>
         <Breadcrumb/>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
@@ -18,6 +21,7 @@ export default {
   components: {
     Breadcrumb
   },
+
   methods: {
     logout() {
       window.sessionStorage.clear()
@@ -43,11 +47,18 @@ export default {
     display: flex;
     align-items: center;
 
-    img {
-      margin-right: 15px;
-      width: 60px;
-      height: 60px;
+    > .toggle-button {
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
+      line-height: 24px;
+      color: #333;
+      text-align: right;
+      padding-right: 10px;
+      cursor: pointer;
     }
   }
 }
+
+
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h3>数据报表</h3>
     <!-- 卡片视图区域 -->
     <el-card>
       <div id="main" style="width:750px;height:400px;"></div>
