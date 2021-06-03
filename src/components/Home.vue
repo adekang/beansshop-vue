@@ -1,19 +1,14 @@
 <template>
   <div>
     <el-container class="home-container">
-      <el-header>
-        <div>
-          <img src="../assets/logocore.png" alt="logo">
-          <span>beans后台管理系统</span>
-        </div>
-        <el-button type="info" @click="logout">退出</el-button>
-      </el-header>
+      <!--      内容区域-->
       <el-container>
         <el-aside :width="isCollapse? '64px': '200px'">
           <!-- 菜单折叠 -->
           <div class="toggle-button" @click="toggleCollapse">
             |||
           </div>
+
           <!-- 侧边栏菜单 -->
           <el-menu
               background-color="#333744"
@@ -46,15 +41,19 @@
           </el-menu>
         </el-aside>
         <el-main>
+          <Header/>
           <!--路由插件-->
           <router-view/>
         </el-main>
       </el-container>
+
     </el-container>
   </div>
 </template>
 
 <script>
+import Header from '@/components/comm/Header.vue'
+
 export default {
   data() {
     return {
@@ -69,6 +68,9 @@ export default {
       isCollapse: false,
       activePath: ''
     }
+  },
+  components: {
+    Header
   },
   created() {
     this.getMenuList()
@@ -103,29 +105,6 @@ export default {
 <style lang="scss" scoped>
 .home-container {
   height: 100vh;
-}
-
-.el-header {
-  background-color: #373D41;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  font-size: 20px;
-
-  > div {
-    display: flex;
-    align-items: center;
-
-    img {
-      width: 60px;
-      height: 60px;
-    }
-
-    > span {
-      margin-left: 15px;
-    }
-  }
 }
 
 .el-aside {

@@ -131,6 +131,7 @@
 
 <script>
 export default {
+  name: 'users',
   data() {
     //验证邮箱的规则
     let checkEmail = (rule, value, cb) => {
