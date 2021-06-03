@@ -4,10 +4,8 @@
     <el-header>
       <div>
         <img src="../../assets/logocore.png" alt="logo">
-      </div>
-      <p>
         <Breadcrumb/>
-      </p>
+      </div>
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
   </div>
@@ -46,6 +44,7 @@ export default {
     align-items: center;
 
     img {
+      margin-right: 15px;
       width: 60px;
       height: 60px;
     }
